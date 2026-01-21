@@ -114,6 +114,7 @@ const App: React.FC = () => {
   
   // Audio State
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.6); // Volume state (0.0 to 1.0)
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const horrorAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -129,7 +130,14 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Global Audio Control
+  // Sync volume with audio element
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  // Global Audio Control (Play/Pause)
   const toggleAudio = () => {
     if (audioRef.current) {
       if (isAudioPlaying) {
@@ -159,7 +167,7 @@ const App: React.FC = () => {
   const handleEnterSite = async () => {
     if (audioRef.current) {
       try {
-        audioRef.current.volume = 0.6;
+        audioRef.current.volume = volume;
         await audioRef.current.play();
         setIsAudioPlaying(true);
       } catch (err) {
@@ -453,13 +461,24 @@ const App: React.FC = () => {
             <span className="tabular-nums">{observerCount.toLocaleString()}</span> Watching
           </div>
           
-          <button 
-            onClick={toggleAudio}
-            className="text-gray-400 hover:text-apnea-cyan transition-colors"
-            title={isAudioPlaying ? "Mute Ambient Sound" : "Enable Ambient Sound"}
-          >
-            {isAudioPlaying ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-          </button>
+          <div className="flex items-center gap-2 group">
+            <button 
+              onClick={toggleAudio}
+              className="text-gray-400 hover:text-apnea-cyan transition-colors"
+              title={isAudioPlaying ? "Mute Ambient Sound" : "Enable Ambient Sound"}
+            >
+              {isAudioPlaying && volume > 0 ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            </button>
+            <input 
+              type="range" 
+              min="0" 
+              max="1" 
+              step="0.01" 
+              value={volume}
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+              className="w-20 h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-apnea-cyan hover:h-2 transition-all"
+            />
+          </div>
 
           <button onClick={() => document.getElementById('ticket-section')?.scrollIntoView({ behavior: 'smooth'})} className="bg-white/10 hover:bg-white/20 px-3 py-1 rounded border border-white/20 transition-colors">
             BOOK_NOW

@@ -5,7 +5,7 @@ export const MEMBER_PROFILE = {
   group: "APNEA",
   position: "Center / Main Performer",
   dob: "2035.02.20 02:20 AM",
-  specs: "182cm / RH+A",
+  specs: "182cm / RH+A / 23",
   keywords: ["OBSERVATION_REQUIRED", "MAINTENANCE_MODE", "ARTIFICIAL_AFFECT"],
   description: "APNEA의 센터. 무대 위에서 완벽한 감정을 재현하는 관측 대상. 시스템은 현재 정상 작동 중입니다.",
   visual: {
